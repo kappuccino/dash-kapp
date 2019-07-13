@@ -8,6 +8,7 @@ import configureStore, { history } from './redux/configStore'
 
 import GlobalStyle from './style/Globale.style'
 import theme from './style/theme'
+import 'antd/dist/antd.css'
 
 import KappRouter from './router'
 

@@ -4,6 +4,7 @@ import {palette} from 'styled-theme'
 export default createGlobalStyle`
 	body{
 		background: ${props => props.theme.main};
+		color: #FFF;
 	}
 	
   h1,

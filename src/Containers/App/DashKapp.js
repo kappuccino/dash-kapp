@@ -1,16 +1,31 @@
 import React from 'react'
-import {Link } from "react-router-dom";
+import { Layout } from 'antd'
+
+import AppRouter from './AppRouter'
+import Sidebar from './Sidebar'
+import Topbar from './Topbar'
+import Content from './Content'
 
 
 
 
-export default function DashKapp() {
+export default function DashKapp(props) {
 
 	return (
-		<>
-			<Link to="/">Home</Link>
-			<Link to="/about/">About</Link>
-		</>
+		<Layout style={{ minHeight: '100vh' }}>
+
+			<Sidebar />
+
+			<Layout>
+				<Topbar />
+
+				<Content>
+					<AppRouter url={props.match.url}/>
+				</Content>
+
+			</Layout>
+
+		</Layout>
 	)
 
 }
