@@ -1,5 +1,5 @@
 const theme = {
-	main: '#bada55',
+	main: '#f1f3f6',
 
 	fonts: {
 		primary: 'Roboto, sans-serif'

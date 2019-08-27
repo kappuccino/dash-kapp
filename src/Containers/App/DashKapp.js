@@ -20,7 +20,7 @@ export default function DashKapp(props) {
 				<Topbar />
 
 				<Content>
-					<AppRouter url={props.match.url}/>
+					<AppRouter {...props}  url={props.match.url} />
 				</Content>
 
 			</Layout>

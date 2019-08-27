@@ -2,6 +2,7 @@ import {createGlobalStyle} from 'styled-components'
 import {palette} from 'styled-theme'
 
 export default createGlobalStyle`
+	
 	body{
 		background: ${props => props.theme.main};
 		color: #FFF;
@@ -23,8 +24,8 @@ export default createGlobalStyle`
   img,
   svg {
     &::selection {
-      background: ${palette('primary', 0)};
-      color: #fff;
+      /*background: ${palette('primary', 0)};
+      color: #fff;*/
     }
   }
 

@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {ThemeProvider} from 'styled-components'
 import {Provider} from 'react-redux'
-//import { Route, Switch } from 'react-router' // react-router v4/v5
 import { ConnectedRouter } from 'connected-react-router'
 
 import configureStore, { history } from './redux/configStore'
@@ -18,11 +17,9 @@ const store = configureStore()
 
 
 // todo
-
 /*
 <LocaleProvider locale={currentAppLocale.antd}>
-      <IntlProvider locale={currentAppLocale.locale} messages={currentAppLocale.messages}>
-					<ThemeProvider theme={themes[themeConfig.theme]}>
+  <IntlProvider locale={currentAppLocale.locale} messages={currentAppLocale.messages}>
 */
 
 

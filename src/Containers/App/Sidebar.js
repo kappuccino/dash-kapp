@@ -1,22 +1,22 @@
-import React, {useState} from 'react'
+import React from 'react'
+import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
+
+import Logo from './Logo'
+import appAction from '../../redux/app/actions'
 
 const { Sider } = Layout
 const { SubMenu } = Menu
 
-
-export default function Sidebar() {
-
-	const [collapsed, setCollapsed] = useState(false)
-
-	const onCollapse = collapsed => {
-		setCollapsed(collapsed)
-	}
-
+export function Sidebar(props) {
 
 	return (
-		<Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-			<div className="logo" />
+		<Sider trigger={null} collapsible collapsed={props.collapsed} onCollapse={props.toggleCollapsed}>
+
+			<Link to="/dashboard">
+				<Logo collapsed={props.collapsed} />
+			</Link>
 
 			<Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
 
@@ -33,7 +33,7 @@ export default function Sidebar() {
 					key="sub1"
 					title={
 						<span>
-                  <Icon type="user" />
+                <Icon type="user" />
                   <span>User</span>
                 </span>
 					}
@@ -63,6 +63,18 @@ export default function Sidebar() {
 			</Menu>
 
 		</Sider>
-	);
+	)
 
 }
+
+export default connect(
+	// mapStateToProps
+	state => ({
+		collapsed: state.App.collapsed
+	}),
+
+	// mapDispatchToProps
+	{
+		toggleCollapsed: appAction.toggleCollapsed
+	}
+)(Sidebar)

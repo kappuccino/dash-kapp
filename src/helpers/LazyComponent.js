@@ -16,62 +16,13 @@ const Loading = () => {
 	return <Skeleton />
 }
 
-export default function LazyComponent(importComponent) {
-
+export default function LazyComponent(importComponent, props) {
 	const Next = lazy(importComponent)
 
-	return () => (
+	return (
 		<Suspense fallback={<Loading />}>
-			<Next />
+			<Next {...props} />
 		</Suspense>
 	)
 
 }
-
-/*
-import 'react-placeholder/lib/reactPlaceholder.css';
-import ReactPlaceholder from 'react-placeholder';
-
-export default function asyncComponent(importComponent, props={}) {
-
-	class AsyncFunc extends Component {
-
-		constructor(props) {
-			super(props);
-			this.state = {
-				component: null
-			};
-		}
-
-		componentWillMount() {
-			Nprogress.start();
-		}
-
-		componentWillUnmount() {
-			this.mounted = false;
-		}
-
-		async componentDidMount() {
-			this.mounted = true;
-			const { default: Component } = await importComponent();
-			Nprogress.done();
-			if (this.mounted) {
-				this.setState({
-					component: <Component {...this.props} {...props} />
-				});
-			}
-		}
-
-		render() {
-			const Component = this.state.component || <div />;
-			return (
-				<ReactPlaceholder type="text" rows={7} ready={Component !== null}>
-					{Component}
-				</ReactPlaceholder>
-			);
-		}
-	}
-
-	return AsyncFunc
-}
-*/

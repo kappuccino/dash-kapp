@@ -38,7 +38,7 @@ export default connect(
 
 	// mapStateToProps
 	state => ({
-		isLoggedIn: true //state.Auth.get('idToken') !== null
+		isLoggedIn: state.Auth.get('idToken') !== null
 	})
 
 )(PublicRoutes)
