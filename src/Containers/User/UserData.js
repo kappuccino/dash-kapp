@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Button, Typography, Form, Row, Col, Input, Divider, Select, Icon} from 'antd'
+import {Button, Typography, Form, Row, Col, Input, Divider, Select} from 'antd'
 
 import LayoutWrapper from '../../Components/utility/LayoutWrapper'
 import ContentWrapper from '../../Components/utility/ContentWrapper'
@@ -15,10 +15,7 @@ const myFields = ['login', 'password', 'role', 'firstName', 'lastName']
 
 const TheForm = props => {
 
-	const {getFieldDecorator} = props.form // getFieldValue
-	const passwordRequired = props._id === 'new'
-
-	const [viewPass, setViewPass] = useState(passwordRequired)
+	const {getFieldDecorator, getFieldValue} = props.form
 
 	const handleSubmit = e => {
 		e.preventDefault()
@@ -33,6 +30,7 @@ const TheForm = props => {
 
 	}
 
+	const passwordRequired = props._id === 'new' || !!getFieldValue('password')
 
 	return (
 		<Form onSubmit={handleSubmit}>
@@ -44,7 +42,7 @@ const TheForm = props => {
 						{getFieldDecorator('login', {
 							rules: [{
 								required: true,
-								message: 'Email is used to log in'
+								message: `Email is used to log in`
 							}]
 						})(
 							<Input/>
@@ -52,7 +50,7 @@ const TheForm = props => {
 					</Form.Item>
 
 					<Admin>
-						<Form.Item label="Roles" {...formItemLayout}>
+						<Form.Item label="Role" {...formItemLayout}>
 							{getFieldDecorator('role', {
 								defaultValue: 'user'
 							})(
@@ -68,30 +66,18 @@ const TheForm = props => {
 				</Col>
 
 				<Col span={12}>
-					{!viewPass &&
-						<Form.Item label="Password" {...formItemLayout}>
-						{getFieldDecorator('password', {
-							required: false,
-							message: false
-						})(
-							<Button onClick={() => setViewPass(true)}>Change password</Button>
-						)}
-						</Form.Item>
-					}
 
-					{viewPass &&
-						<Form.Item label="Password" {...formItemLayout}>
+					<Form.Item label="Password" {...formItemLayout}>
 						{getFieldDecorator('password', {
 							rules: [{
-								required: true,
-								validator: passwordValidator,
-								message: 'Password must be 6 characters long minimum'
+								required: passwordRequired,
+								validator: (r, v, cb)  => passwordValidator(r, v, cb, passwordRequired),
+								message: 'Password must be 6 caracters long minimum'
 							}]
 						})(
-							<Input addonAfter={passwordRequired && <Icon type="stop" onClick={() => setViewPass(false)} />}/>
+							<Input type="password" autoComplete="new-password" />
 						)}
-						</Form.Item>
-					}
+					</Form.Item>
 
 				</Col>
 			</Row>
@@ -124,7 +110,7 @@ const TheForm = props => {
 
 const ManagedForm = createManagedForm(TheForm, myFields)
 
-export function UserData(props) {
+export default function UserData(props) {
 
 	const _id = props.match.params._id
 	const user = useSelector(state => state.User.single || {})
@@ -140,9 +126,9 @@ export function UserData(props) {
 		if(_id === 'new'){
 			resetUser()
 		}else
-		if(_id !== user._id){
-			loadUser(_id)
-		}
+			if(_id !== user._id){
+				loadUser(_id)
+			}
 
 	}, [_id, user._id, dispatch])
 
@@ -154,31 +140,29 @@ export function UserData(props) {
 	const fields = createFormObject(user, myFields)
 
 	const title = _id === 'new'
-		? 'Create a new user'
-		: `${user.firstName || ''} ${user.lastName}`.trim() || `#${user._id}`
+		? 'New user'
+		: `${user.firstName || ''} ${user.lastName || ''}`.trim() || `#${user._id}`
 
 	return (
 		<LayoutWrapper full={true}>
 			<ContentWrapper>
 
-				<Link to="/dashboard/user/5aafa61f8b2a5e00040343be">lionel</Link> &nbsp;
-				<Link to="/dashboard/user/5a93e0262e3944e75f8f9451">ben</Link> &nbsp;
-				<Link to="/dashboard/user/new">new</Link>
+				{/*<Link to="/dashboard/user/5aafa61f8b2a5e00040343be">lionel</Link> &nbsp;
+				<Link to="/dashboard/user/5a93e0262e3944e75f8f9451">ben</Link> &nbsp;*/}
+				<Link to="/dashboard/user/new">Create a new user</Link>
 
 				<Typography.Title>{title}</Typography.Title>
 
 				<ManagedForm _id={_id} fields={fields} onSubmit={handleSubmit} />
 
-				fields
+				{/*fields
 				<pre>{ JSON.stringify(fields, null, 2) }</pre>
 
 				user
-				<pre>{ JSON.stringify(user, null, 2) }</pre>
+				<pre>{ JSON.stringify(user, null, 2) }</pre>*/}
 
 			</ContentWrapper>
 		</LayoutWrapper>
 	)
 
 }
-
-export default UserData

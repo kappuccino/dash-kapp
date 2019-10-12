@@ -8,8 +8,8 @@ export default function User(props) {
 
 	const content = (
 		<TopbarDropdownWrapper className="isoUserDropdown">
-			<Link to={'/dashboard/settings'} className="isoDropdownLink">Préférences</Link>
-			<Button type="link" className="isoDropdownLink" onClick={props.logout}>Se déconnecter</Button>
+			<Link to={'/dashboard/settings'} className="isoDropdownLink">Settings</Link>
+			<Button type="link" className="isoDropdownLink" onClick={props.logout}>Log out</Button>
 		</TopbarDropdownWrapper>
 	)
 

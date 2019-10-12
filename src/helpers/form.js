@@ -50,7 +50,9 @@ export const formItemLayout = {
 	colon: false
 }
 
-export const passwordValidator = (r, v, cb) => {
+export const passwordValidator = (r, v, cb, required) => {
+	if(!required && !v) return cb()
+
 	const valid = /^.{6,}$/.test(v || '')
 	return valid ? cb() : cb(false)
 }

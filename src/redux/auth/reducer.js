@@ -3,15 +3,21 @@ import actions from './actions'
 
 const initState = new Map({
 	idToken: null,
+	viewTFA: false,
 	lostStatus: -1,
-	resetStatus: -1
+	resetStatus: -1,
+	TFAstatus: -1,
+	TFAauth: null
 })
 
-export default function authReducer(state = initState, action) {
-	switch (action.type) {
+export default function authReducer(state = initState, {type, payload}) {
+
+	switch (type) {
 		case actions.LOGIN_SUCCESS:
-			//console.log('reducer LOGIN_SUCCESS idToken=', action.payload)
-			return state.set('idToken', action.payload)
+			return state.set('idToken', payload)
+
+		case actions.LOGIN_ASK_TFA:
+			return state.set('TFAstatus', 1).set('TFAauth', payload)
 
 		case actions.LOST_SUCCESS:
 			return state.set('lostStatus', 1)

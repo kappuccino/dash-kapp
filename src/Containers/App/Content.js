@@ -6,8 +6,6 @@ import {Container} from './Content.style'
 const {Content} = Layout
 
 
-
-
 export default function(props){
 
 	return (

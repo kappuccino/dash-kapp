@@ -1,11 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {Row, Col, Button, Form, Input, Typography} from 'antd'
 
 import LayoutWrapper from '../../Components/utility/LayoutWrapper'
 import ContentWrapper from '../../Components/utility/ContentWrapper'
 
-import {mapPropsToFields, createFormObject, passwordValidator} from '../../helpers/form'
+import {createFormObject, passwordValidator, createManagedForm, formItemLayout} from '../../helpers/form'
 import actions from '../../redux/myprofile/actions'
 
 const Title = Typography.Title
@@ -28,12 +28,14 @@ const TheForm = props => {
 
 	}
 
+	const passwordRequired = !!getFieldValue('password')
+
 	return (
 		<Form onSubmit={handleSubmit}>
 
 			<Row gutter={16}>
 				<Col span={12}>
-					<Form.Item label="First name">
+					<Form.Item label="First name" {...formItemLayout}>
 						{getFieldDecorator('firstName')(
 							<Input/>
 						)}
@@ -42,7 +44,7 @@ const TheForm = props => {
 
 
 				<Col span={12}>
-					<Form.Item label="Last name">
+					<Form.Item label="Last name" {...formItemLayout}>
 						{getFieldDecorator('lastName')(
 							<Input/>
 						)}
@@ -52,11 +54,11 @@ const TheForm = props => {
 
 			<Row gutter={16}>
 				<Col span={12}>
-					<Form.Item label="Password">
+					<Form.Item label="Password" {...formItemLayout}>
 						{getFieldDecorator('password', {
 							rules: [{
-								required: !!getFieldValue('password'),
-								validator: passwordValidator,
+								required: passwordRequired,
+								validator: (r, v, cb)  => passwordValidator(r, v, cb, passwordRequired),
 								message: 'Password must be 6 characters long minimum'
 							}]
 						})(
@@ -72,60 +74,37 @@ const TheForm = props => {
 	)
 }
 
-const ManagedForm = Form.create({
-	/*onFieldsChange(props, changedFields) {
-		props.onChange(changedFields)
-	},*/
+const ManagedForm = createManagedForm(TheForm, myFields)
 
-	mapPropsToFields(props) {
-		return mapPropsToFields(props, myFields)
-	},
+export default function Settings(){
 
-	onValuesChange(props, changedValues, allValues) {
-		//console.log('onValuesChange', {props, changedValues, allValues})
-		props.onChange(changedValues)
-	},
-})(TheForm)
+	const myProfile = useSelector(state => state.MyProfile)
 
-const Settings = (props) => {
+	const dispatch = useDispatch()
+	const changeMyProfile = values => dispatch(actions.changeMyProfile(values))
+	const saveMyProfile = values => dispatch(actions.saveMyProfile(values))
 
 	const handleChange = (values) => {
 		//console.log('handleChange', values)
 	}
 
 	const handleSubmit = (values) => {
-		console.log('handleSubmit()', values)
-		props.changeMyProfile(values)
-		props.saveMyProfile(values)
+		//console.log('handleSubmit()', values)
+		changeMyProfile(values)
+		saveMyProfile(values)
 	}
 
-	const fields = createFormObject(props.myProfile, myFields)
+	const fields = createFormObject(myProfile, myFields)
 
 	return (
 		<LayoutWrapper full={true}>
 			<ContentWrapper>
 
-				<Title>Mon Compte</Title>
+				<Title>My Settings</Title>
 
 				<ManagedForm fields={fields} onSubmit={handleSubmit} onChange={handleChange} />
-
-				<pre>{JSON.stringify(props.myProfile, null, 2)}</pre>
 
 			</ContentWrapper>
 		</LayoutWrapper>
 	)
 }
-
-export default connect(
-	// mapStateToProps
-	state => ({
-		myProfile: state.MyProfile
-	}),
-
-	// mapDispatchToProps
-	{
-		changeMyProfile: actions.changeMyProfile,
-		saveMyProfile: actions.saveMyProfile
-	}
-)(Settings)
-

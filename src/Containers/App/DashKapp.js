@@ -2,11 +2,10 @@ import React from 'react'
 import { Layout } from 'antd'
 
 import AppRouter from './AppRouter'
-import Sidebar from './Sidebar'
-import Topbar from './Topbar'
+import Sidebar from '../Sidebar/Sidebar'
+import Topbar from '../Topbar/Topbar'
 import Content from './Content'
-
-
+import Socket from './Socket'
 
 
 export default function DashKapp(props) {
@@ -14,9 +13,12 @@ export default function DashKapp(props) {
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
 
+			<Socket />
+
 			<Sidebar />
 
 			<Layout>
+
 				<Topbar />
 
 				<Content>

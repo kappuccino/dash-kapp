@@ -1,0 +1,2 @@
+- 2d factor auth
+- Magick link email auth

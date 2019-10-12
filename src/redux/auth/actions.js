@@ -1,9 +1,16 @@
 const actions = {
 	CHECK_AUTHORIZATION: 'CHECK_AUTHORIZATION',
+	MAGIC_LINK: 'MAGIC_LINK',
+	MAGIC_LOGIN: 'MAGIC_LOGIN',
 
 	LOGIN_REQUEST: 'LOGIN_REQUEST',
 	LOGIN_SUCCESS: 'LOGIN_SUCCESS',
 	LOGIN_ERROR: 'LOGIN_ERROR',
+
+	LOGIN_ASK_TFA: 'LOGIN_ASK_TFA',
+
+	LOGIN_CHECK_TFA: 'LOGIN_CHECK_TFA',
+	LOGIN_CHECK_TFA_ERROR: 'LOGIN_CHECK_TFA_ERROR',
 
 	LOGOUT: 'LOGOUT',
 	LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
@@ -40,6 +47,21 @@ const actions = {
 
 	logout: () => ({
 		type: actions.LOGOUT
+	}),
+
+	magicLink: login => ({
+		type: actions.MAGIC_LINK,
+		payload: {login}
+	}),
+
+	magicLogin: token => ({
+		type: actions.MAGIC_LOGIN,
+		payload: token
+	}),
+
+	checkTFA: token => ({
+		type: actions.LOGIN_CHECK_TFA,
+		payload: token
 	})
 }
 

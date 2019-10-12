@@ -1,4 +1,4 @@
-import {all, takeEvery, put, fork} from 'redux-saga/effects'
+import {all, takeEvery, select, put, fork} from 'redux-saga/effects'
 
 import * as api from '../../helpers/api-auth'
 import crypto from '../../helpers/crypto'
@@ -24,11 +24,82 @@ export function* loginRequest() {
 
 			if (res.success) {
 				if(debug) console.log('==> LOGIN_SUCCESS')
-				yield put({type: actions.LOGIN_SUCCESS, payload: res.user.auth})
-				//yield loadProfile(res.user.auth)
+
+				if(res.user.TFAenabled){
+					if(debug) console.log('Ask for TFA')
+					yield put({type: actions.LOGIN_ASK_TFA, payload: res.user.auth})
+				}else {
+					yield put({type: actions.LOGIN_SUCCESS, payload: res.user.auth})
+				}
 			} else {
 				openErrorNotification('Mauvais identifiant ou mot de passe')
 				yield put({type: actions.LOGIN_ERROR})
+			}
+
+		} catch (e) {
+			yield put({type: actions.LOGIN_ERROR})
+		}
+
+	})
+}
+
+export function* checkTFA() {
+	//if(debug) console.log('loginRequest()')
+
+	yield takeEvery(actions.LOGIN_CHECK_TFA, function* ({payload}) {
+
+		try {
+			const auth = yield select(state => state.Auth.get('TFAauth'))
+			const res = yield api.checkTFA(auth, payload)
+			if(debug) console.log('res => ', res)
+
+			if (res.verified) {
+				if(debug) console.log('==> LOGIN_CHECK_TFA_SUCCESS')
+				yield put({type: actions.LOGIN_SUCCESS, payload: auth})
+			} else {
+				openErrorNotification('Token not valid')
+				yield put({type: actions.LOGIN_CHECK_TFA_ERROR})
+			}
+
+		} catch (e) {
+			yield put({type: actions.LOGIN_CHECK_TFA_ERROR})
+		}
+
+	})
+}
+
+export function* magicLinkRequest() {
+	//if(debug) console.log('loginRequest()')
+
+	yield takeEvery(actions.MAGIC_LINK, function* ({payload}) {
+		const {login} = payload
+
+		try {
+			const res = yield api.magicLink(login)
+			if(debug) console.log('magic link res => ', login, res)
+
+			openSuccessNotification('Check your mail inbox')
+
+		} catch (e) {
+			yield put({type: actions.LOGIN_ERROR})
+		}
+
+	})
+}
+
+export function* magicLogin() {
+	//if(debug) console.log('loginLogin()')
+
+	yield takeEvery(actions.MAGIC_LOGIN, function* ({payload}) {
+		try {
+			const res = yield api.magicLogin(payload)
+			if(debug) console.log('magiclogin res => ', res)
+
+			if (res.success) {
+				if(debug) console.log('==> MAGIC LOGIN SUCCESS')
+				yield put({type: actions.LOGIN_SUCCESS, payload: res.user.auth})
+			} else {
+				openErrorNotification('Magic link failed')
 			}
 
 		} catch (e) {
@@ -134,6 +205,9 @@ export default function* rootSaga() {
 	yield all([
 		fork(checkAuthorization),
 		fork(loginRequest),
+		fork(magicLinkRequest),
+		fork(magicLogin),
+		fork(checkTFA),
 		fork(lostRequest),
 		fork(resetRequest),
 		fork(loginSuccess),
