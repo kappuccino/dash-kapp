@@ -1,22 +1,28 @@
 const actions = {
+	LOAD_MYPROFILE: 'LOAD_MYPROFILE',
+	LOAD_MYPROFILE_ERROR: 'LOAD_MYPROFILE_ERROR',
+
 	MYPROFILE_LOADED: 'MYPROFILE_LOADED',
 	MYPROFILE_UNLOAD: 'MYPROFILE_UNLOAD',
-
-	CHANGE_MYPROFILE: 'CHANGE_MYPROFILE',
 
 	SAVE_MYPROFILE: 'SAVE_MYPROFILE',
 	SAVE_MYPROFILE_SUCCESS: 'SAVE_MYPROFILE_SUCCESS',
 	SAVE_MYPROFILE_ERROR: 'SAVE_MYPROFILE_ERROR',
 
-	//--
+	DISABLE_TFA: 'DISABLE_TFA',
 
-	changeMyProfile : data => ({
-		type: actions.CHANGE_MYPROFILE,
-		payload: data
-	}),
+	//--
 
 	saveMyProfile: () => ({
 		type: actions.SAVE_MYPROFILE
+	}),
+
+	loadMyProfile: () => ({
+		type: actions.LOAD_MYPROFILE
+	}),
+
+	disableTFA: () => ({
+		type: actions.DISABLE_TFA
 	})
 
 }

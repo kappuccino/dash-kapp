@@ -11,6 +11,7 @@ import profileActions from '../myprofile/actions'
 
 const debug = false
 
+// --
 
 export function* loginRequest() {
 	//if(debug) console.log('loginRequest()')
@@ -110,13 +111,13 @@ export function* magicLogin() {
 }
 
 export function* lostRequest() {
-	yield takeEvery('LOST_REQUEST', function* ({payload}) {
+	yield takeEvery(actions.LOST_REQUEST, function* ({payload}) {
 		const {login} = payload
 
 		try {
 			const res = yield api.lost(login)
-			if(res.success) {
-				openSuccessNotification('Procédure envoyée par email')
+			if(res) {
+				openSuccessNotification('Process sent by email')
 				yield put({type: actions.LOST_SUCCESS})
 			}else {
 				yield put({type: actions.LOST_ERROR})
@@ -130,7 +131,7 @@ export function* lostRequest() {
 }
 
 export function* resetRequest() {
-	yield takeEvery('RESET_REQUEST', function* ({payload}) {
+	yield takeEvery(actions.RESET_REQUEST, function* ({payload}) {
 		const {token, password} = payload
 
 		try {
@@ -174,10 +175,6 @@ export function* checkAuthorization() {
 		if (!token) return
 
 		yield put({type: actions.LOGIN_SUCCESS, payload: token})
-
-		// Load the profile (if the token is good)
-		//yield loadProfile(token)
-
 	})
 }
 
@@ -200,6 +197,8 @@ function* loadProfile(token) {
 	}
 
 }
+
+// --
 
 export default function* rootSaga() {
 	yield all([

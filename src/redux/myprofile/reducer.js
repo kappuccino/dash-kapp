@@ -22,12 +22,8 @@ export default function myProfileReducer(state = initState, action) {
 		case action.MYPROFILE_UNLOAD:
 			return {}
 
-		// A la sauvegarde du profile, faire sauter le mot de passe pour vider MYPROFILE_LOADEDle champs
 		case actions.SAVE_MYPROFILE_SUCCESS:
 			return {...state, password: null}
-
-		case actions.CHANGE_MYPROFILE:
-			return {...state, ...payload}
 
 		default:
 			return state

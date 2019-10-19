@@ -2,6 +2,7 @@ import {all, fork, select, put, takeEvery} from 'redux-saga/effects'
 
 import actions from './actions'
 
+// --
 
 export function* usersUpdated(){
 	yield takeEvery(actions.APP_USERS_UPDATE, function* ({payload}) {
@@ -18,6 +19,8 @@ export function* usersUpdated(){
 
 	})
 }
+
+// --
 
 export default function* rootSaga(){
 	yield all([

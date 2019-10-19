@@ -9,6 +9,8 @@ import {openErrorNotification, openSuccessNotification} from '../../helpers/noti
 
 const debug = false
 
+// --
+
 export function* loadUser(){
 	yield takeEvery(actions.LOAD_USER, function* ({payload}){
 		if(debug) console.log('[SAGA]', 'loadUser()', payload)
@@ -45,7 +47,6 @@ export function* saveUser(){
 				yield put({type: actions.SAVE_USER_ERROR})
 			}else{
 				openSuccessNotification('User saved')
-				console.log({redirect})
 				if(redirect) return history.push(`/dashboard/user/${res._id}`)
 				yield put({type: actions.LOAD_USER, payload: res._id})
 			}
@@ -74,7 +75,7 @@ export function* searchUser(){
 		try{
 			const params = yield select(state => state.User.params)
 			if(debug) console.log('params used to request users', params)
-			const res = yield api.getUsers(params)
+			const res = yield api.searchUser(params)
 
 			if(res.error){
 				openErrorNotification(res.error)
@@ -103,6 +104,8 @@ export function* removeUser(){
 	})
 
 }
+
+// --
 
 export default function* rootSaga(){
 	yield all([

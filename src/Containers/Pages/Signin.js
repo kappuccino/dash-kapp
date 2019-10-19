@@ -29,7 +29,6 @@ function Login(props){
 		props.magicLink(login)
 	}
 
-
 	return (
 		<form onSubmit={handleSubmit}>
 			<div className="inputWrapper">
@@ -42,9 +41,7 @@ function Login(props){
 
 			<div className="inputWrapper isoLeftRightComponent">
 				<Button type="primary" htmlType="submit" disabled={!valid}>Log in</Button>
-				<Button onClick={handleMagicLink}>
-					Send me a link by email
-				</Button>
+				<Button onClick={handleMagicLink}>Send me a link by email</Button>
 			</div>
 
 			<div className="centerComponent isoHelperWrapper">
@@ -118,6 +115,7 @@ function Lost(props){
 
 function Reset(props){
 
+	const {status, reset} =  props
 	const [valid, setValid] = useState(false)
 	const [confirm, setConfirm] = useState('')
 	const {password, resetToken, setPassword, openLogin} = useContext(LoginContext)
@@ -128,7 +126,7 @@ function Reset(props){
 
 	const handleSubmit = e => {
 		e.preventDefault()
-		props.reset(resetToken, password)
+		reset(resetToken, password)
 	}
 
 	return (
@@ -144,12 +142,12 @@ function Reset(props){
 			</div>
 
 			<div className="inputWrapper isoLeftRightComponent">
-				<Button type="primary" htmlType="submit" disabled={!valid}>Update my password</Button>
+			{status !== 1 && <Button type="primary" htmlType="submit" disabled={!valid}>Update my password</Button>}
+			{status === 1 && <Button type="primary" onClick={openLogin}>log in</Button>}
 			</div>
 
-			{ props.status === 1 &&
-				<p>Your new password is saved.<br />
-					<Button type="link" onClick={openLogin}>log in</Button></p>
+			{status === 1 &&
+			<p>Your new password is saved</p>
 			}
 
 		</form>

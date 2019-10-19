@@ -21,7 +21,7 @@ const TheForm = props => {
 		e.preventDefault()
 
 		props.form.validateFields((err, values) => {
-			console.log({err, values})
+			//console.log({err, values})
 
 			//console.log('Received values of form: ', values)
 			if(!err) return props.onSubmit(values)
